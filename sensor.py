@@ -156,7 +156,7 @@ class Sensor:
                         # Imprimimos resultado
                         distan = "ultrasonico: %.2f cm" % distancia                        
                         data2 = distan.split(":")
-                        sensorData = {"type":data2[0],"value":data2[1],"fecha_creacion":str(datetime.now()),"sensor":sensor}
+                        sensorData = {"type":data2[0],"value":distancia,"fecha_creacion":str(datetime.now()),"sensor":sensor,"unidad":"cm"}
                         lista.agregar(sensorData)
                         print(distan);
                         break;
@@ -169,7 +169,9 @@ class Sensor:
                     humedad, temperatura = Adafruit_DHT.read_retry(dht, sensor['pines'][0])
                     print ('Humedad: ' , format(humedad))
                     print ('Temperatura: ' , format(temperatura))
-                    sensorData = {"type":'temperatura',"value":[temperatura, humedad],"fecha_creacion":str(datetime.now()),"sensor":sensor}
+                    sensorData = {"type":'temperatura',"value":temperatura,"fecha_creacion":str(datetime.now()),"sensor":sensor,"unidad":"%"}
+                    sensorData2 = {"type":'humedad',"value":humedad,"fecha_creacion":str(datetime.now()),"sensor":sensor,"unidad":"%"}
+                    lista.agregar(sensorData2)                    
                     lista.agregar(sensorData)
                     break; #Cada segundo se evalúa el sensor
         lista.guardar(lista.lista);
