@@ -3,7 +3,7 @@ import pymongo;
 class ConexionMongo:
     def __init__(self,db,collection):
         try:
-            self.conexion = pymongo.MongoClient("mongodb+srv://Leoncio:Leoncio2@cluster0.kk3lull.mongodb.net/?retryWrites=true&w=majority",serverSelectionTimeoutMS=8000);
+            self.conexion = pymongo.MongoClient("mongodb+srv://Leoncio:Leoncio2@cluster0.kk3lull.mongodb.net/?retryWrites=true&w=majority");
             self.db = self.conexion[db];
             self.collection = self.db[collection];
             self.verificacion = True;

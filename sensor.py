@@ -6,9 +6,10 @@ from myjson import Json
 import time
 import RPi.GPIO as GPIO
 import Adafruit_DHT
+from prettytable import PrettyTable
 
 class Sensor:
-    def __init__(self,_id,nombre,tipo,ubicacion,descripcion,fecha_creacion,pines, unidad) :
+    def __init__(self,_id,nombre,tipo,ubicacion,descripcion,fecha_creacion,pines) :
         self._id = _id
         self.nombre = nombre
         self.tipo = tipo
@@ -16,8 +17,6 @@ class Sensor:
         self.ubicacion = ubicacion
         self.descripcion = descripcion
         self.fecha_creacion = fecha_creacion
-        self.unidad = unidad
-
     @staticmethod
     
     def leerSensor():
@@ -82,8 +81,6 @@ class Sensor:
         else:
             print("no hay datos que mandar")
     @staticmethod
-    
-    
     def mostrarSensores():
         file = Json('sensores.json')
         sensores = file.cargar()
@@ -99,7 +96,6 @@ class Sensor:
         else:
             print("No hay sensores")
     @staticmethod
-    
     def guardarSensores():
         file = Json('sensores.json');
         conexion = ConexionMongo('Sensores','senosresInfo')
@@ -158,10 +154,9 @@ class Sensor:
                         #Obtenemos la distancia considerando que la señal recorre dos veces la distancia a medir y que la velocidad del sonido es 343m/s
                         distancia = (34300 * duracion) / 2
                         # Imprimimos resultado
-                        distancia = distancia
                         distan = "ultrasonico: %.2f cm" % distancia                        
                         data2 = distan.split(":")
-                        sensorData = {"type":data2[0],"value":distancia,"fecha_creacion":str(datetime.now()),"sensor":sensor}
+                        sensorData = {"type":data2[0],"value":data2[1],"fecha_creacion":str(datetime.now()),"sensor":sensor}
                         lista.agregar(sensorData)
                         print(distan);
                         break;
@@ -174,10 +169,8 @@ class Sensor:
                     humedad, temperatura = Adafruit_DHT.read_retry(dht, sensor['pines'][0])
                     print ('Humedad: ' , format(humedad))
                     print ('Temperatura: ' , format(temperatura))
-                    sensorDataTemperatura = {"type":'Temperatura',"value":temperatura,"fecha_creacion":str(datetime.now()),"sensor":sensor}
-                    sensorDataHumedad = {"type":'Humedad',"value":humedad,"fecha_creacion":str(datetime.now()),"sensor":sensor}
-                    lista.agregar(sensorDataTemperatura)
-                    lista.agregar(sensorDataHumedad)                    
+                    sensorData = {"type":'temperatura',"value":[temperatura, humedad],"fecha_creacion":str(datetime.now()),"sensor":sensor}
+                    lista.agregar(sensorData)
                     break; #Cada segundo se evalúa el sensor
         lista.guardar(lista.lista);
     @staticmethod
@@ -209,3 +202,19 @@ class Sensor:
                 print("Opcion no valida")
             res = input("deseas salir?")
         GPIO.cleanup()
+
+
+#Sensor.mostrarSensores()
+#input("escribe algo")
+
+
+
+#serial
+# Configura el objeto Serial
+#puerto_serial = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+
+# Lee datos del puerto serial
+#while True:
+    #linea = puerto_serial.readline().decode('utf-8').rstrip()
+    #if linea:
+        #print(linea)
